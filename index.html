@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기초연금 365 </title>
+    <title>기초연금 365 (심화질문탑재)</title>
     <style>
         /* 1. 폰트: 페이퍼로지 */
         @font-face {
@@ -287,21 +287,27 @@
     let step = 0; 
     let userType = ''; 
 
-    // ★ [카테고리 데이터베이스] - 문구 수정 완료
+    // ★ [카테고리 데이터베이스] - 심화 질문 탑재 완료
     const categories = {
         "자격/대상": [
             { q: "몇 살부터 받을 수 있어?", a: "만 65세 생일이 지나셔야 합니다.<br>올해(2025년)는 <b>1960년생</b> 생일이 지나신 분들부터 대상이십니다! 🎂", thought: "수급 연령 확인" },
             { q: "자식들의 수입이 많으면 받을 수 없어?", a: "걱정하지 마세요! 자녀분이 아무리 부자여도 <b>어르신 형편만 봅니다.</b><br>자녀 소득은 전혀 상관없습니다! 😊", thought: "부양의무자 기준 확인" },
             { q: "공무원 연금을 받으면 받을 수 없어?", a: "공무원, 사학, 군인 연금 등을 받고 계시면 <b>원칙적으로 기초연금 대상에서 제외되십니다.</b><br>법적으로 제한되어 있어 너무 아쉽습니다 😥", thought: "직역연금 제외 확인" },
-            { q: "기초생활수급자도 받을 수 있어?", a: "받으실 수는 있는데, 기초연금만큼 <b>생계급여가 깎일 수 있습니다.</b><br>오히려 손해일 수 있으니 꼭 담당자와 상담해 보셔야 합니다!", thought: "중복 급여 감액 확인" }
+            { q: "기초생활수급자도 받을 수 있어?", a: "받으실 수는 있는데, 기초연금만큼 <b>생계급여가 깎일 수 있습니다.</b><br>오히려 손해일 수 있으니 꼭 담당자와 상담해 보셔야 합니다!", thought: "중복 급여 감액 확인" },
+            { q: "주소만 자녀 집이고 실제론 따로 사는데?", a: "<b>실제 거주지</b>가 중요합니다.<br>하지만 위장전입으로 오해받을 수 있으니, 실거주지 기준으로 상담을 받으시는 게 가장 안전합니다.", thought: "실거주지 원칙 확인" },
+            { q: "이혼(사별)하면 독거노인으로 계산해?", a: "네, 맞습니다. 배우자가 없으시면 <b>단독가구</b>로 변경되어 선정 기준액이 <b>228만 원</b>으로 적용됩니다.", thought: "가구 유형 변경 확인" }
         ],
         "재산/소득": [
+            { q: "빚이 있으면 재산에서 빼줘?", a: "그럼요! 은행 등 금융기관 대출금은 재산에서 <b>차감(빼기)</b>해 드립니다.<br>다만, 개인 간에 빌린 돈은 인정되지 않을 수 있습니다.", thought: "부채 공제 확인" },
+            { q: "자녀 집에 얹혀 사는데 집값도 포함돼?", a: "자녀 명의의 집은 어르신의 재산으로 잡히지 않습니다!<br>다만, 시가 6억 원 이상의 고가 주택이라면 <b>'무료임차소득'</b>이라 해서 소득이 약간 잡힐 수는 있습니다.", thought: "무료임차소득 확인" },
             { q: "자동차가 있어도 돼?", a: "차는 있으셔도 됩니다! 단, <b>4,000만 원 이상의 고급차</b>(3,000cc 이상 등)가 있으면 수급이 어려우실 수 있습니다. 🚗", thought: "차량가액 기준 확인" },
             { q: "집이 있어도 돼?", a: "집도 소득으로 계산되긴 합니다.<br>하지만 <b>지역별로(최대 1억 3,500만 원) 집값은 공제(차감)해드리니</b> 너무 걱정 말고 신청해 보세요!", thought: "기본재산 공제 확인" },
-            { q: "일해서 버는 돈은?", a: "일해서 버는 월급은 <b>110만 원</b>까지 없는 셈 쳐드리고, 나머지 돈도 <b>30% 더 깎아드립니다.</b><br>소일거리를 하셔도 충분히 받으실 수 있습니다! 💪", thought: "근로소득 공제 확인" },
             { q: "통장에 돈이 좀 있는데?", a: "은행 예금은 <b>2,000만 원까지는 공제</b>해 드립니다.<br>그 이상인 금액만 소득으로 잡히니 안심하세요.", thought: "금융재산 공제 확인" }
         ],
         "신청/지급": [
+            { q: "아파서 못 가는데 자녀가 대신 해도 돼?", a: "네, 가능합니다! 자녀분이나 배우자가 <b>대신 신청(대리 신청)</b>하실 수 있습니다.<br>위임장과 신분증을 챙겨서 방문하시면 됩니다.", thought: "대리 신청 확인" },
+            { q: "이사 갔는데 다시 신청해야 해?", a: "아니요! 전입신고만 하시면 <b>자동으로 연계</b>되니까 다시 신청하실 필요 없습니다. 편하게 계시면 됩니다! 😊", thought: "전입 신고 연계 확인" },
+            { q: "연금 받는 통장 바꾸고 싶은데 어떡해?", a: "주민센터에 가시거나 <b>'복지로'</b> 홈페이지에서 계좌 변경 신청을 하시면 됩니다.<br>압류방지통장(행복지킴이통장)으로도 바꾸실 수 있습니다.", thought: "계좌 변경 안내" },
             { q: "어디서 신청해?", a: "사시는 곳 <b>행정복지센터(주민센터)</b>나 <b>국민연금공단</b>으로 가시면 됩니다.<br>준비물은 <b>신분증</b>이랑 <b>통장</b>! 딱 두 개면 됩니다.", thought: "신청 장소 안내" },
             { q: "돈은 매달 몇 일에 받아?", a: "매달 <b>25일</b>에 어르신 통장으로 입금됩니다.<br>25일이 휴일이면 그 전날 미리 넣어드립니다! 📅", thought: "지급일 안내" },
             { q: "해외에서 일정기간 머무면 못 받아?", a: "해외에 <b>60일 이상</b> 계속 머무르시면 그 기간 동안은 지급이 정지됩니다.<br>귀국하시면 다시 받으실 수 있습니다.", thought: "해외 체류 확인" },
@@ -366,7 +372,7 @@
         scrollToBottom();
     }
 
-    // ★ [UI] 카테고리 버튼 보여주기
+    // UI: 카테고리 버튼 보여주기
     function showCategories() {
         addUserMessage("질문 목록 보여줘.");
         
@@ -401,7 +407,7 @@
         }, 500);
     }
 
-    // ★ [UI] 세부 질문 리스트 보여주기
+    // UI: 세부 질문 리스트 보여주기
     function showSubQuestions(category) {
         addUserMessage(category + " 관련 질문");
         
@@ -431,7 +437,7 @@
                 list.appendChild(btn);
             });
 
-            // 상담원 연결 버튼 (문구 수정됨)
+            // 상담원 연결 버튼
             const contactBtn = document.createElement('button');
             contactBtn.className = 'q-btn q-btn-special';
             contactBtn.innerText = "📞 상담원 연결해 질문하기";
@@ -487,21 +493,28 @@
             return;
         }
         
-        // 2. 텍스트 입력 시 카테고리 답변 검색
+        // 텍스트 검색 (카테고리 + 키워드)
         let found = false;
         
         Object.keys(categories).forEach(cat => {
             categories[cat].forEach(item => {
                 const cleanQ = item.q.replace("?", "");
-                if (text.includes(cleanQ) || (text.includes(cat) && text.length < 10)) {
-                    // 정확 매칭 처리 (필요시)
-                }
+                // 1. 질문 그대로 매칭
+                if (text.includes(cleanQ)) { addBotMessage(item.thought, item.a); found = true; return; }
                 
-                if(text.includes("차") && item.q.includes("자동차")) { addBotMessage(item.thought, item.a); found = true; }
-                else if(text.includes("자식") && item.q.includes("자녀")) { addBotMessage(item.thought, item.a); found = true; }
-                else if(text.includes("신청") && item.q.includes("신청")) { addBotMessage(item.thought, item.a); found = true; }
-                else if(text.includes("공무원") && item.q.includes("공무원")) { addBotMessage(item.thought, item.a); found = true; }
-                else if(text.includes("언제") && item.q.includes("언제")) { addBotMessage(item.thought, item.a); found = true; }
+                // 2. 핵심 키워드 매칭 (보완)
+                if(!found) {
+                    if(text.includes("빚") && item.q.includes("빚")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("이사") && item.q.includes("이사")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("통장") && item.q.includes("통장")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("아파") && item.q.includes("아파")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("주소") && item.q.includes("주소")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("이혼") && item.q.includes("이혼")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("차") && item.q.includes("자동차")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("자식") && item.q.includes("자식")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("신청") && item.q.includes("신청")) { addBotMessage(item.thought, item.a); found = true; }
+                    else if(text.includes("공무원") && item.q.includes("공무원")) { addBotMessage(item.thought, item.a); found = true; }
+                }
             });
         });
 
