@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>기초연금 365 (2025년형)</title>
     <style>
-        /* 1. 폰트: 페이퍼로지8 (깔끔하고 귀여운 느낌) */
+        /* 1. 폰트: 페이퍼로지 */
         @font-face {
             font-family: 'Paperlogy';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
@@ -250,22 +250,23 @@
 
 <script>
     const chatBox = document.getElementById('chatBox');
-    
-    // 2025년 기준 데이터
     const LIMIT_SINGLE = 2280000;
     const LIMIT_COUPLE = 3648000;
-    const CAR_LIMIT = 4000; 
 
     let step = 0; 
     let userType = ''; 
 
-    // 초기 실행
     window.onload = function() {
         addBotMessage(null, "안녕하세요 어르신! 반가워요 🐥<br>저는 <b>2025년 최신 기초연금제</b>를 공부한 <b>'연금 삐약이'</b>에요.<br><br>올해 기준이 많이 올랐으니<br>아래 버튼을 눌러 궁금한 것들을 물어보세요.");
     };
 
     function sendMenu(text) {
-        addUserMessage(text);
+        let displayMsg = text;
+        if(text === "난 얼마 받을 수 있어?") displayMsg = "나 얼마 받을 수 있는지 궁금해.";
+        if(text === "신청 방법은?") displayMsg = "신청은 어떻게 하는 거야?";
+        if(text === "자녀 소득이 높아도 받을 수 있어?") displayMsg = "자식들이 잘살아도 나 받을 수 있어?";
+        
+        addUserMessage(displayMsg);
         setTimeout(() => processBotResponse(text), 500);
     }
 
@@ -283,12 +284,10 @@
     function addUserMessage(text) {
         const row = document.createElement('div');
         row.className = 'msg-row user';
-        
         const bubble = document.createElement('div');
         bubble.className = 'message user-message';
         bubble.innerText = text;
         bubble.style.animation = "fadeIn 0.3s";
-
         row.appendChild(bubble);
         chatBox.appendChild(row);
         scrollToBottom();
@@ -301,23 +300,18 @@
             thoughtDiv.innerHTML = `<div class="thought-bubble">☁️ ${thoughtText}</div>`;
             chatBox.appendChild(thoughtDiv);
         }
-
         const row = document.createElement('div');
         row.className = 'msg-row';
-
         const icon = document.createElement('div');
         icon.className = 'bot-icon';
         icon.innerText = "🐥";
-
         const bubble = document.createElement('div');
         bubble.className = 'message bot-message';
         bubble.innerHTML = answerHtml;
         bubble.style.animation = "fadeIn 0.4s";
-
         row.appendChild(icon);
         row.appendChild(bubble);
         chatBox.appendChild(row);
-        
         scrollToBottom();
     }
 
@@ -328,7 +322,6 @@
     function updateMenu(options) {
         const menuArea = document.getElementById('menuArea');
         menuArea.innerHTML = ''; 
-        
         options.forEach(opt => {
             const btn = document.createElement('button');
             btn.className = 'menu-btn';
@@ -341,122 +334,152 @@
     // 🧠 챗봇 핵심 지능
     function processBotResponse(text) {
         
-        // 1. 계산기 시작
-        if (text.includes("얼마") || text.includes("받을 수") || text.includes("계산")) {
-            step = 1;
-            addBotMessage(
-                "2025년 가구 유형별 기준을 준비 중...", 
-                "네! 올해 기준에 따라 기초연금 수령 여부를 확인해 드릴게요!<br>혹시 <b>혼자 사시나요, 아니면 배우자가 있으신가요?</b>"
-            );
-            updateMenu(["혼자 살아요", "배우자 있어요", "처음으로"]);
-            return;
-        }
-
-        // 2. 가구 유형 선택
+        // ★ [중요] 계산 단계(Step 1, 2)일 때는 만능 키워드보다 '사용자 답변'을 최우선으로 처리
+        
+        // 2. 가구 유형 선택 (Step 1)
         if (step === 1) {
-            if (text.includes("혼자")) {
+            if (text.includes("혼자") || text.includes("독거")) {
                 userType = 'single';
                 addBotMessage(
                     "2025년 단독가구 기준(228만원) 적용!", 
                     "알겠어요! 올해 혼자 사시는 분은 <b>228만 원</b>보다 소득이 적으면 기초연금 수령 대상자에 해당해요.<br><br><b>한 달 소득(월급+재산환산액)</b>이 대략 얼마인지 숫자만 적어주세요."
                 );
-            } else if (text.includes("배우자")) {
+                updateMenu(["잘 모르겠어", "처음으로"]);
+                step = 2; // 다음 단계로
+            } else if (text.includes("배우자") || text.includes("남편") || text.includes("아내") || text.includes("있어") || text.includes("부부")) {
                 userType = 'couple';
                 addBotMessage(
                     "2025년 부부가구 기준(364.8만원) 적용!", 
                     "알겠어요! 올해 두 분 합쳐서 <b>364만 8천 원</b>보다 적으면 기초연금 수령 대상자에 해당해요.<br><br><b>부부 합산 월 소득</b>이 대략 얼마인지 숫자만 적어주세요. ex) 10만원 -> 10"
                 );
+                updateMenu(["잘 모르겠어", "처음으로"]);
+                step = 2; // 다음 단계로
             } else {
                 addBotMessage(null, "혼자 사시는지, 배우자가 있으신지 버튼을 눌러주세요 🐥");
-                return;
             }
-            updateMenu(["잘 모르겠어요", "처음으로"]);
-            step = 2;
-            return;
+            return; // 여기서 함수 종료 (다른 키워드 검사 안 함)
         }
 
-        // 3. 소득 입력 및 결과
+        // 3. 소득 입력 및 결과 (Step 2)
         if (step === 2) {
-            if(text.includes("모르")) {
-                addBotMessage(null, "정확히 모르시면 주민센터 상담이 제일 정확해요! 👍<br>일단 <b>100만 원</b>이라고 가정하고 계산해볼까요?");
-                updateMenu(["네, 100만원으로 계산해줘", "처음으로"]);
+            // "몰라", "100만원으로 해줘", "응" 등 긍정/모름 처리
+            if(text.includes("모르") || text.includes("몰라") || text.includes("응") || text.includes("그래") || text.includes("네") || text.includes("해줘")) {
+                const inputNum = 100; // 100만원 가정
+                calculateResult(inputNum);
                 return;
             }
 
+            // 숫자 추출
             const inputNum = parseInt(text.replace(/[^0-9]/g, ''));
-            if (isNaN(inputNum)) {
-                addBotMessage(null, "숫자를 못 찾았어요 😢<br>예를 들어 <b>150</b> 처럼 숫자만 적어주세요.");
-                return;
-            }
-
-            const income = inputNum * 10000;
-            const limit = userType === 'single' ? LIMIT_SINGLE : LIMIT_COUPLE;
-            const limitText = userType === 'single' ? "228만 원" : "364만 8천 원";
-
-            let thought = "";
-            let answer = "";
-
-            if (income <= limit) {
-                thought = "계산 결과: 2025년 기준 충족! (수급 가능)";
-                answer = `<b>기초연금 수령 대상자에 해당되세요!</b> 🎉<br>입력하신 소득이 올해 기준(${limitText})보다 적거든요.<br>매달 약 <b>34만 원대</b>를 받으실 거예요!`;
+            
+            // 숫자가 있으면 바로 계산
+            if (!isNaN(inputNum)) {
+                calculateResult(inputNum);
             } else {
-                thought = "계산 결과: 기준 초과... (공제 확인 필요)";
-                answer = `기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>금융재산 공제(2,000만원)</b> 등을 적용하면 달라질 수 있으니 꼭 신청해보세요!`;
+                addBotMessage(null, "숫자를 못 찾았어요 😢<br>예를 들어 <b>150</b> 처럼 숫자만 적어주세요.<br>(잘 모르시면 '몰라'라고 해주세요)");
             }
+            return; // 여기서 함수 종료
+        }
 
-            addBotMessage(thought, answer);
-            step = 0;
-            updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
+        // --- 여기서부터는 Step 0 (일반 대화) 상태일 때만 작동 ---
+
+        // 1. 계산기 시작 명령어
+        if (["얼마", "받을 수", "계산", "금액", "돈"].some(k => text.includes(k))) {
+            step = 1;
+            addBotMessage(
+                "2025년 가구 유형별 기준을 준비 중...", 
+                "네! 올해 기준에 따라 기초연금 수령 여부를 확인해 드릴게요!<br>혹시 <b>혼자 사시나요, 아니면 배우자가 있으신가요?</b>"
+            );
+            updateMenu(["혼자 살아", "배우자 있어", "처음으로"]);
             return;
         }
 
-        // --- [자율 학습 질문] ---
+        // --- [★만능 키워드 처리★] ---
 
-        if (text.includes("차") || text.includes("자동차")) {
+        // 자동차
+        if (["차", "자동차", "승용차", "배기량", "cc", "소나타", "그랜저", "제네시스", "벤츠", "트럭", "용달"].some(k => text.includes(k))) {
             addBotMessage(
-                "2025 사업안내 [재산조사] 항목 확인 중...",
-                "자동차가 있어도 되는데요, 혹시 <b>4,000만 원 이상</b>인 승용차를 보유 중이신가요?<br>그렇다면 월 소득으로 100% 잡혀서 받기 어려울 수 있어요 😥"
+                "재산 조사 항목: '차량가액' 확인",
+                "자동차(트럭, 승용차)가 있어도 되는데요, 혹시 <b>4,000만 원 이상</b>인 고급 승용차(제네시스, 벤츠 등)를 보유 중이신가요?<br>그렇다면 월 소득으로 100% 잡혀서 받기 어려울 수 있어요 😥"
             );
         }
-        else if (text.includes("자식") || text.includes("자녀")) {
+        // 자녀
+        else if (["자식", "자녀", "아들", "딸", "며느리", "사위", "애들", "부자", "대기업", "돈 잘"].some(k => text.includes(k))) {
             addBotMessage(
-                "부양의무자 기준 폐지 확인 완료!",
-                "걱정 마세요! 자녀분이 아무리 부자여도 <b>어르신 형편만 봅니다.</b><br>자녀 소득은 전~혀 상관없어요! 😊"
+                "부양의무자 기준 폐지 안내",
+                "걱정 마세요! 자녀분(아들, 딸)이 아무리 부자여도 <b>어르신 형편만 봅니다.</b><br>자녀 소득은 전~혀 상관없어요! 😊"
             );
         }
-        else if (text.includes("신청") || text.includes("어디서")) {
+        // 부동산
+        else if (["집", "아파트", "빌라", "재산", "땅", "논", "밭", "시골집", "전세", "월세"].some(k => text.includes(k))) {
             addBotMessage(
-                "접수처: 읍면동 주민센터, 국민연금공단",
+                "기본재산액 공제 안내",
+                "살고 계신 집(아파트, 시골집 등)도 소득으로 계산돼요.<br>하지만 <b>지역별로(최대 1억 3,500만 원) 집값은 빼주니까</b>, 너무 걱정 마시고 신청해보세요!"
+            );
+        }
+        // 신청
+        else if (["신청", "어디", "장소", "동사무소", "주민센터", "서류"].some(k => text.includes(k))) {
+            addBotMessage(
+                "접수처 및 준비물 안내",
                 "신청은 동네 <b>행정복지센터(동사무소)</b>나 <b>국민연금공단</b>으로 가시면 돼요.<br><b>신분증</b>이랑 <b>통장</b>만 꼭 챙겨가세요!"
             );
         }
-        else if (text.includes("공무원")) {
+        // 공무원
+        else if (["공무원", "군인", "사학", "선생님", "교사", "우체국", "연금"].some(k => text.includes(k))) {
             addBotMessage(
                 "직역연금 수급권자 제외 요건 확인...",
-                "공무원연금, 사학연금 등을 받고 계시면 <b>원칙적으로 기초연금 대상이 아니에요.</b><br>너무 아쉽지만 제도가 그렇답니다 😥"
+                "공무원, 선생님(사학), 군인 연금 등을 받고 계시면 <b>원칙적으로 기초연금 대상이 아니에요.</b><br>너무 아쉽지만 제도가 그렇답니다 😥"
             );
         }
-        else if (text.includes("수급자") || text.includes("기초생활")) {
+        // 기초수급자
+        else if (["수급자", "기초생활", "생계", "급여", "깎여"].some(k => text.includes(k))) {
             addBotMessage(
                 "중복 급여 조정 여부 확인...",
                 "이건 조심하셔야 해요.<br>기초연금을 받으면 <b>생계급여가 그만큼 깎일 수 있어요.</b><br>담당 공무원과 꼭 상담해보셔야 손해가 없어요!"
             );
         }
+        // 리셋
         else if (text.includes("처음")) {
-            step = 0;
-            addBotMessage(null, "네! 처음으로 돌아왔어요 🐥");
-            updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
+            resetBot();
         }
         else {
             addBotMessage(
                 "질문 의도를 파악하는 중...",
-                "제가 아직 배우는 중이라 잘 모르겠어요 😅<br>아래 버튼을 눌러주시겠어요?"
+                "제가 아직 배우는 중이라 잘 모르겠어요 😅<br>혹시 <b>얼마 받는지</b> 궁금하신가요? 아니면 <b>신청 방법</b>이 궁금하신가요?<br>아래 버튼을 눌러주시면 제가 바로 알려드릴게요!"
             );
         }
         
         if (step === 0) {
             updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
         }
+    }
+
+    // 결과 계산 함수 (중복 제거)
+    function calculateResult(inputNum) {
+        const income = inputNum * 10000;
+        const limit = userType === 'single' ? LIMIT_SINGLE : LIMIT_COUPLE;
+        const limitText = userType === 'single' ? "228만 원" : "364만 8천 원";
+
+        let thought = "";
+        let answer = "";
+
+        if (income <= limit) {
+            thought = "계산 결과: 2025년 기준 충족! (수급 가능)";
+            answer = `<b>기초연금 수령 대상자에 해당되세요!</b> 🎉<br>입력하신 소득이 올해 기준(${limitText})보다 적거든요.<br>매달 약 <b>34만 원대</b>를 받으실 거예요!`;
+        } else {
+            thought = "계산 결과: 기준 초과... (공제 확인 필요)";
+            answer = `기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>금융재산 공제(2,000만원)</b> 등을 적용하면 달라질 수 있으니 꼭 신청해보세요!`;
+        }
+
+        addBotMessage(thought, answer);
+        step = 0;
+        updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
+    }
+
+    function resetBot() {
+        step = 0;
+        addBotMessage(null, "네! 처음으로 돌아왔어요 🐥");
+        updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
     }
 </script>
 
