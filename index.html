@@ -19,7 +19,6 @@
         
         body {
             font-family: 'Paperlogy', sans-serif;
-            /* 배경: 따뜻한 크림색 + 귀여운 도트 패턴 */
             background-color: #FFFDF7; 
             background-image: radial-gradient(#E5E0D0 1.5px, transparent 1.5px);
             background-size: 24px 24px;
@@ -30,7 +29,6 @@
             overflow: hidden;
         }
 
-        /* 스마트폰 프레임 */
         .app-container {
             width: 100%;
             max-width: 500px;
@@ -54,7 +52,7 @@
         .header-title {
             font-family: 'Paperlogy-Bold', sans-serif;
             font-size: 1.6rem;
-            color: #FF8C00; /* 오렌지색 */
+            color: #FF8C00;
             margin: 0;
             display: flex;
             align-items: center;
@@ -146,7 +144,7 @@
             animation: float 2s infinite ease-in-out;
         }
 
-        /* 5. 고정 메뉴바 (요청하신 메뉴로 수정됨) */
+        /* 5. 고정 메뉴바 */
         .fixed-menu {
             padding: 12px 15px;
             background: #ffffff;
@@ -163,7 +161,7 @@
             background: #FFF4E0;
             color: #D97706;
             border: 1px solid #FFE0B2;
-            padding: 12px 5px;
+            padding: 12px 10px;
             border-radius: 15px;
             cursor: pointer;
             font-size: 0.95rem;
@@ -237,9 +235,9 @@
         </div>
 
     <div class="fixed-menu" id="menuArea">
-        <button class="menu-btn" onclick="sendMenu('💰 얼마 받을 수 있어?')">💰 얼마 받을 수 있어?</button>
-        <button class="menu-btn" onclick="sendMenu('📝 신청 방법')">📝 신청 방법</button>
-        <button class="menu-btn" onclick="sendMenu('🤔 자식 소득은?')">🤔 자식 소득은?</button>
+        <button class="menu-btn" onclick="sendMenu('난 얼마 받을 수 있어?')">난 얼마 받을 수 있어?</button>
+        <button class="menu-btn" onclick="sendMenu('신청 방법은?')">신청 방법은?</button>
+        <button class="menu-btn" onclick="sendMenu('자녀 소득이 높아도 받을 수 있어?')">자녀 소득이 높아도 받을 수 있어?</button>
     </div>
 
     <div class="input-area">
@@ -253,12 +251,9 @@
 <script>
     const chatBox = document.getElementById('chatBox');
     
-    // ★ [2025년 사업안내 파일 기반 데이터 업데이트 완료]
-    // 단독가구: 228만원, 부부가구: 364.8만원
+    // 2025년 기준 데이터
     const LIMIT_SINGLE = 2280000;
     const LIMIT_COUPLE = 3648000;
-    
-    // 고급자동차 기준 (4000만원 이상)
     const CAR_LIMIT = 4000; 
 
     let step = 0; 
@@ -300,7 +295,6 @@
     }
 
     function addBotMessage(thoughtText, answerHtml) {
-        // AI 생각 구름
         if (thoughtText) {
             const thoughtDiv = document.createElement('div');
             thoughtDiv.className = 'thought-container';
@@ -308,7 +302,6 @@
             chatBox.appendChild(thoughtDiv);
         }
 
-        // 답변
         const row = document.createElement('div');
         row.className = 'msg-row';
 
@@ -332,7 +325,6 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 메뉴 업데이트
     function updateMenu(options) {
         const menuArea = document.getElementById('menuArea');
         menuArea.innerHTML = ''; 
@@ -346,7 +338,7 @@
         });
     }
 
-    // 🧠 챗봇 핵심 지능 (2025 사업안내 학습 반영)
+    // 🧠 챗봇 핵심 지능
     function processBotResponse(text) {
         
         // 1. 계산기 시작
@@ -409,57 +401,51 @@
                 answer = `<b>축하드려요! 받으실 수 있어요!</b> 🎉<br>입력하신 소득이 올해 기준(${limitText})보다 적거든요.<br>매달 약 <b>34만 원대</b>를 받으실 거예요!`;
             } else {
                 thought = "계산 결과: 기준 초과... (공제 확인 필요)";
-                answer = `아이고, 기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>금융재산 공제(2,000만원)</b> 등을 적용하면 달라질 수 있으니 꼭 신청해보세요!`;
+                answer = `기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>금융재산 공제(2,000만원)</b> 등을 적용하면 달라질 수 있으니 꼭 신청해보세요!`;
             }
 
             addBotMessage(thought, answer);
             step = 0;
-            updateMenu(["💰 얼마 받을 수 있어?", "📝 신청 방법", "🤔 자식 소득은?"]);
+            updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
             return;
         }
 
-        // --- [자율 학습 질문] (파일 내용 반영) ---
+        // --- [자율 학습 질문] ---
 
-        // 고급 자동차 (4000만원 기준)
         if (text.includes("차") || text.includes("자동차")) {
             addBotMessage(
                 "2025 사업안내 [재산조사] 항목 확인 중...",
                 "자동차가 있어도 되는데요, 혹시 <b>4,000만 원 이상</b>인 고급 승용차인가요?<br>그렇다면 월 소득으로 100% 잡혀서 받기 어려울 수 있어요 😥"
             );
         }
-        // 자녀 소득
         else if (text.includes("자식") || text.includes("자녀")) {
             addBotMessage(
                 "부양의무자 기준 폐지 확인 완료!",
                 "걱정 마세요! 자녀분이 아무리 부자여도 <b>어르신 형편만 봅니다.</b><br>자녀 소득은 전~혀 상관없어요! 😊"
             );
         }
-        // 신청 장소
         else if (text.includes("신청") || text.includes("어디서")) {
             addBotMessage(
                 "접수처: 읍면동 주민센터, 국민연금공단",
                 "신청은 동네 <b>행정복지센터(동사무소)</b>나 <b>국민연금공단</b>으로 가시면 돼요.<br><b>신분증</b>이랑 <b>통장</b>만 꼭 챙겨가세요!"
             );
         }
-        // 공무원 연금
         else if (text.includes("공무원")) {
             addBotMessage(
                 "직역연금 수급권자 제외 요건 확인...",
                 "공무원연금, 사학연금 등을 받고 계시면 <b>원칙적으로 기초연금 대상이 아니에요.</b><br>너무 아쉽지만 제도가 그렇답니다 😥"
             );
         }
-        // 기초수급자
         else if (text.includes("수급자") || text.includes("기초생활")) {
             addBotMessage(
                 "중복 급여 조정 여부 확인...",
                 "이건 조심하셔야 해요.<br>기초연금을 받으면 <b>생계급여가 그만큼 깎일 수 있어요.</b><br>담당 공무원과 꼭 상담해보셔야 손해가 없어요!"
             );
         }
-        // 리셋
         else if (text.includes("처음")) {
             step = 0;
             addBotMessage(null, "네! 처음으로 돌아왔어요 🐥");
-            updateMenu(["💰 얼마 받을 수 있어?", "📝 신청 방법", "🤔 자식 소득은?"]);
+            updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
         }
         else {
             addBotMessage(
@@ -469,7 +455,7 @@
         }
         
         if (step === 0) {
-            updateMenu(["💰 얼마 받을 수 있어?", "📝 신청 방법", "🤔 자식 소득은?"]);
+            updateMenu(["난 얼마 받을 수 있어?", "신청 방법은?", "자녀 소득이 높아도 받을 수 있어?"]);
         }
     }
 </script>
