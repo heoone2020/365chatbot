@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기초연금 365 (최종수정)</title>
+    <title>기초연금 365 (최종)</title>
     <style>
         /* 1. 폰트: 페이퍼로지 */
         @font-face {
@@ -267,7 +267,7 @@
     <div class="chat-box" id="chatBox"></div>
 
     <div class="fixed-menu" id="menuArea">
-        <button class="menu-btn" onclick="sendMenu('나 얼마 받나 궁금해')">나 얼마 받나 궁금해</button>
+        <button class="menu-btn" onclick="sendMenu('나는 얼마나 받을 수 있어?')">나는 얼마나 받을 수 있어?</button>
         <button class="menu-btn" onclick="showCategories()">📚 질문 목록 보여줘</button>
     </div>
 
@@ -287,7 +287,7 @@
     let step = 0; 
     let userType = ''; 
 
-    // ★ [카테고리 데이터베이스] - 챗봇 답변은 극존칭으로 수정
+    // ★ [카테고리 데이터베이스]
     const categories = {
         "자격/대상": [
             { q: "몇 살부터 받을 수 있어?", a: "만 65세 생일이 지나셔야 합니다.<br>올해(2025년)는 <b>1960년생</b> 생일이 지나신 분들부터 대상이십니다! 🎂", thought: "수급 연령 확인" },
@@ -366,7 +366,7 @@
         scrollToBottom();
     }
 
-    // ★ [UI] 카테고리 버튼 보여주기
+    // UI: 카테고리 보여주기
     function showCategories() {
         addUserMessage("질문 목록 보여줘.");
         
@@ -401,7 +401,7 @@
         }, 500);
     }
 
-    // ★ [UI] 세부 질문 리스트 보여주기
+    // UI: 세부 질문 보여주기
     function showSubQuestions(category) {
         addUserMessage(category + " 관련 질문");
         
@@ -425,13 +425,12 @@
                 btn.className = 'q-btn';
                 btn.innerText = "Q. " + item.q;
                 btn.onclick = () => {
-                    addUserMessage(item.q); // 질문은 반말(또는 질문 그대로)
-                    setTimeout(() => addBotMessage(item.thought, item.a), 500); // 답변은 존댓말
+                    addUserMessage(item.q); 
+                    setTimeout(() => addBotMessage(item.thought, item.a), 500); 
                 };
                 list.appendChild(btn);
             });
 
-            // 상담원 연결 버튼
             const contactBtn = document.createElement('button');
             contactBtn.className = 'q-btn q-btn-special';
             contactBtn.innerText = "📞 여기에 질문이 없어요 (상담원 연결)";
@@ -468,14 +467,14 @@
         });
     }
 
-    // 🧠 챗봇 로직
+    // 챗봇 로직
     function processBotResponse(text) {
         if (text === "📚 질문 목록 보여줘" || text.includes("목록")) {
             showCategories();
             return;
         }
 
-        // 1. 계산기 로직 (우선순위)
+        // 1. 계산기 로직
         if (step > 0) {
             handleCalculator(text);
             return;
@@ -488,18 +487,12 @@
             return;
         }
         
-        // 2. 텍스트 입력 시 카테고리 답변 검색 (오류 수정됨)
+        // 2. 카테고리 키워드 검색
         let found = false;
-        
         Object.keys(categories).forEach(cat => {
             categories[cat].forEach(item => {
-                // 질문 텍스트에서 "Q. " 제거하고 매칭하거나, 핵심 단어로 매칭
                 const cleanQ = item.q.replace("?", "");
-                if (text.includes(cleanQ) || (text.includes(cat) && text.length < 10)) {
-                    // 정확히 일치하거나 매우 유사할 때만
-                }
-                
-                // 간단하게 키워드 매칭 (만능 키워드 대체)
+                // 간단 키워드 매칭
                 if(text.includes("차") && item.q.includes("자동차")) { addBotMessage(item.thought, item.a); found = true; }
                 else if(text.includes("자식") && item.q.includes("자녀")) { addBotMessage(item.thought, item.a); found = true; }
                 else if(text.includes("신청") && item.q.includes("신청")) { addBotMessage(item.thought, item.a); found = true; }
@@ -508,13 +501,12 @@
             });
         });
 
-        if (found) return; // 찾았으면 종료
+        if (found) return;
         
-        // 못 찾았을 때
         addBotMessage("의도 파악 중...", "죄송합니다, 제가 잘 알아듣지 못했습니다 😅<br><b>[📚 질문 목록 보여줘]</b> 버튼을 누르셔서 주제를 골라보시겠어요?");
     }
 
-    // 계산기 함수 (존댓말 수정)
+    // 계산기 함수
     function handleCalculator(text) {
         if (step === 1) {
             if (text.includes("혼자") || text.includes("독거")) {
@@ -548,7 +540,7 @@
         else addBotMessage("계산 결과: 초과", `아이고, 기준(${limitText})보다 소득이 조금 높으시네요.<br>하지만 <b>공제</b>를 받으면 가능할 수도 있으니 꼭 주민센터에 신청해 보세요!`);
         
         step = 0;
-        updateMenu(["나 얼마 받나 궁금해", "📚 질문 목록 보여줘"]);
+        updateMenu(["나는 얼마나 받을 수 있어?", "📚 질문 목록 보여줘"]);
     }
 </script>
 
