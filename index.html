@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기초연금 365</title>
+    <title>기초연금 365 (2025년형)</title>
     <style>
         /* 1. 폰트: 페이퍼로지 (깔끔하고 귀여운 느낌) */
         @font-face {
@@ -30,7 +30,7 @@
             overflow: hidden;
         }
 
-        /* 스마트폰 프레임 (그림자 더 부드럽게) */
+        /* 스마트폰 프레임 */
         .app-container {
             width: 100%;
             max-width: 500px;
@@ -42,19 +42,19 @@
             border-right: 1px solid #f0f0f0;
         }
 
-        /* 2. 헤더: 귀여운 포인트 컬러 */
+        /* 2. 헤더 */
         .header {
             padding: 20px;
             padding-top: 40px;
             background-color: #ffffff;
-            border-bottom: 2px dashed #eee; /* 점선으로 귀여움 강조 */
+            border-bottom: 2px dashed #eee;
             text-align: center;
             z-index: 10;
         }
         .header-title {
             font-family: 'Paperlogy-Bold', sans-serif;
             font-size: 1.6rem;
-            color: #FF8C00; /* 따뜻한 오렌지색 */
+            color: #FF8C00; /* 오렌지색 */
             margin: 0;
             display: flex;
             align-items: center;
@@ -72,11 +72,10 @@
             flex: 1;
             overflow-y: auto;
             padding: 20px;
-            background-color: #FFFDF9; /* 아주 연한 아이보리 */
+            background-color: #FFFDF9;
             scroll-behavior: smooth;
         }
 
-        /* 메시지 컨테이너 (아이콘 배치용) */
         .msg-row {
             display: flex;
             align-items: flex-start;
@@ -87,7 +86,7 @@
             justify-content: flex-end;
         }
 
-        /* 챗봇 프로필 아이콘 (병아리) */
+        /* 챗봇 프로필 (병아리) */
         .bot-icon {
             width: 42px;
             height: 42px;
@@ -102,7 +101,7 @@
             flex-shrink: 0;
         }
 
-        /* 말풍선 공통 */
+        /* 말풍선 스타일 */
         .message {
             max-width: 75%;
             padding: 14px 18px;
@@ -114,26 +113,24 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.03);
         }
         
-        /* 챗봇 말풍선 */
         .bot-message {
             background-color: #ffffff;
             color: #4a4a4a;
             border: 1px solid #f0f0f0;
-            border-top-left-radius: 4px; /* 말풍선 꼬리 느낌 */
+            border-top-left-radius: 4px;
         }
 
-        /* 사용자 말풍선 */
         .user-message {
-            background-color: #FFB347; /* 파스텔 오렌지 */
+            background-color: #FFB347;
             color: white;
             border-top-right-radius: 4px;
         }
 
-        /* 4. AI 생각 구름 (귀엽게) */
+        /* 4. AI 생각 구름 */
         .thought-container {
             width: 100%;
             display: flex;
-            padding-left: 55px; /* 아이콘 너비만큼 띄움 */
+            padding-left: 55px;
             margin-bottom: 5px;
         }
         .thought-bubble {
@@ -146,10 +143,10 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            animation: float 2s infinite ease-in-out; /* 둥둥 떠있는 애니메이션 */
+            animation: float 2s infinite ease-in-out;
         }
 
-        /* 5. 하단 고정 메뉴 (탭) */
+        /* 5. 고정 메뉴바 (요청하신 메뉴로 수정됨) */
         .fixed-menu {
             padding: 12px 15px;
             background: #ffffff;
@@ -163,8 +160,8 @@
         .menu-btn {
             font-family: 'Paperlogy', sans-serif;
             flex: 1;
-            background: #FFF4E0; /* 연한 살구색 */
-            color: #D97706; /* 진한 검은색 텍스트 */
+            background: #FFF4E0;
+            color: #D97706;
             border: 1px solid #FFE0B2;
             padding: 12px 5px;
             border-radius: 15px;
@@ -217,7 +214,6 @@
             box-shadow: 0 3px 6px rgba(255, 179, 71, 0.4);
         }
 
-        /* 애니메이션 */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
@@ -234,16 +230,16 @@
 <div class="app-container">
     <div class="header">
         <h1 class="header-title">🐥 기초연금 365</h1>
-        <div class="header-subtitle">어르신의 든든한 짝꿍 (챗봇 상담)</div>
+        <div class="header-subtitle">2025년 기준 완벽 학습 완료!</div>
     </div>
 
     <div class="chat-box" id="chatBox">
         </div>
 
     <div class="fixed-menu" id="menuArea">
-        <button class="menu-btn" onclick="sendMenu('💰 난 얼마 받을 수 있어?')">💰 얼마 받을 수 있어?</button>
-        <button class="menu-btn" onclick="sendMenu('📝 신청 방법이 뭐야?')">📝 신청 방법</button>
-        <button class="menu-btn" onclick="sendMenu('🤔 자식 소득이 많아도 받을 수 있어?')">🤔 자식 소득은?</button>
+        <button class="menu-btn" onclick="sendMenu('💰 얼마 받을 수 있어?')">💰 얼마 받을 수 있어?</button>
+        <button class="menu-btn" onclick="sendMenu('📝 신청 방법')">📝 신청 방법</button>
+        <button class="menu-btn" onclick="sendMenu('🤔 자식 소득은?')">🤔 자식 소득은?</button>
     </div>
 
     <div class="input-area">
@@ -257,17 +253,20 @@
 <script>
     const chatBox = document.getElementById('chatBox');
     
-    // 2025년 기준 데이터
+    // ★ [2025년 사업안내 파일 기반 데이터 업데이트 완료]
+    // 단독가구: 228만원, 부부가구: 364.8만원
     const LIMIT_SINGLE = 2280000;
     const LIMIT_COUPLE = 3648000;
+    
+    // 고급자동차 기준 (4000만원 이상)
+    const CAR_LIMIT = 4000; 
 
     let step = 0; 
     let userType = ''; 
 
     // 초기 실행
     window.onload = function() {
-        // 생각 없이 바로 인사
-        addBotMessage(null, "안녕하세요 어르신! 반가워요 🐥<br>저는 기초연금 박사 <b>'연금 삐약이'</b>에요.<br><br>어려운 내용은 제가 다~ 알아서 해드릴게요.<br>궁금한 걸 아래 버튼으로 눌러보세요!");
+        addBotMessage(null, "안녕하세요 어르신! 반가워요 🐥<br>저는 <b>2025년 최신 기준</b>을 공부한 <b>'연금 삐약이'</b>에요.<br><br>올해 기준이 많이 올랐대요!<br>아래 버튼을 누르거나 궁금한 걸 물어보세요.");
     };
 
     function sendMenu(text) {
@@ -286,7 +285,6 @@
         setTimeout(() => processBotResponse(text), 600);
     }
 
-    // 사용자 메시지 추가
     function addUserMessage(text) {
         const row = document.createElement('div');
         row.className = 'msg-row user';
@@ -301,9 +299,8 @@
         scrollToBottom();
     }
 
-    // 봇 메시지 추가 (캐릭터 아이콘 + 생각 구름 포함)
     function addBotMessage(thoughtText, answerHtml) {
-        // 1. AI 생각 구름 (있으면 표시)
+        // AI 생각 구름
         if (thoughtText) {
             const thoughtDiv = document.createElement('div');
             thoughtDiv.className = 'thought-container';
@@ -311,14 +308,13 @@
             chatBox.appendChild(thoughtDiv);
         }
 
-        // 2. 답변 (아이콘 + 말풍선)
+        // 답변
         const row = document.createElement('div');
         row.className = 'msg-row';
 
-        // 캐릭터 아이콘 (병아리)
         const icon = document.createElement('div');
         icon.className = 'bot-icon';
-        icon.innerText = "🐥"; // 아이콘 대신 이모지 사용
+        icon.innerText = "🐥";
 
         const bubble = document.createElement('div');
         bubble.className = 'message bot-message';
@@ -336,7 +332,7 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    // 하단 메뉴 업데이트
+    // 메뉴 업데이트
     function updateMenu(options) {
         const menuArea = document.getElementById('menuArea');
         menuArea.innerHTML = ''; 
@@ -350,15 +346,15 @@
         });
     }
 
-    // 🧠 챗봇 핵심 지능
+    // 🧠 챗봇 핵심 지능 (2025 사업안내 학습 반영)
     function processBotResponse(text) {
         
         // 1. 계산기 시작
         if (text.includes("얼마") || text.includes("받을 수") || text.includes("계산")) {
             step = 1;
             addBotMessage(
-                "가구 유형을 확인 중이에요...", 
-                "네, 제가 계산해 드릴게요! 🧮<br>혹시 <b>혼자 사시나요, 아니면 짝꿍(배우자)이 있으신가요?</b>"
+                "2025년 가구 유형별 기준을 준비 중...", 
+                "네! 올해 기준이 올라서 받으실 수 있는지 확인해 드릴게요.<br>혹시 <b>혼자 사시나요, 아니면 배우자가 있으신가요?</b>"
             );
             updateMenu(["혼자 살아요", "배우자 있어요", "처음으로"]);
             return;
@@ -369,14 +365,14 @@
             if (text.includes("혼자")) {
                 userType = 'single';
                 addBotMessage(
-                    "2025년 기준(228만원)을 가져왔어요!", 
-                    "네! 그럼 <b>한 달 소득(월급+재산환산액)</b>이 대략 얼마 정도 되세요?<br>편하게 숫자만 적어주세요. ex)십만 원 -> 10"
+                    "2025년 단독가구 기준(228만원) 적용!", 
+                    "알겠어요! 올해 혼자 사시는 분은 <b>228만 원</b>보다 소득이 적으면 받으세요.<br><br><b>한 달 소득(월급+재산환산액)</b>이 대략 얼마인지 숫자만 적어주세요."
                 );
             } else if (text.includes("배우자")) {
                 userType = 'couple';
                 addBotMessage(
-                    "2025년 부부 기준(364.8만원)을 가져왔어요!", 
-                    "알겠어요! 두 분의 <b>소득과 재산을 합친 금액</b>이 한 달에 얼마 정도 되시나요?<br>숫자만 톡! 적어주세요."
+                    "2025년 부부가구 기준(364.8만원) 적용!", 
+                    "알겠어요! 올해 두 분 합쳐서 <b>364만 8천 원</b>보다 적으면 받으세요.<br><br><b>부부 합산 월 소득</b>이 대략 얼마인지 숫자만 적어주세요."
                 );
             } else {
                 addBotMessage(null, "혼자 사시는지, 배우자가 있으신지 버튼을 눌러주세요 🐥");
@@ -390,14 +386,14 @@
         // 3. 소득 입력 및 결과
         if (step === 2) {
             if(text.includes("모르")) {
-                addBotMessage(null, "정확히 모르시면 주민센터에 가보시는 게 제일 정확해요! 👍<br>우선 <b>100만 원</b>이라고 치고 계산해볼까요?");
+                addBotMessage(null, "정확히 모르시면 주민센터 상담이 제일 정확해요! 👍<br>일단 <b>100만 원</b>이라고 가정하고 계산해볼까요?");
                 updateMenu(["네, 100만원으로 계산해줘", "처음으로"]);
                 return;
             }
 
             const inputNum = parseInt(text.replace(/[^0-9]/g, ''));
             if (isNaN(inputNum)) {
-                addBotMessage(null, "숫자를 못 찾았어요 😢<br>예를 들어 <b>100</b> 이렇게 적어주세요.");
+                addBotMessage(null, "숫자를 못 찾았어요 😢<br>예를 들어 <b>150</b> 처럼 숫자만 적어주세요.");
                 return;
             }
 
@@ -409,11 +405,11 @@
             let answer = "";
 
             if (income <= limit) {
-                thought = "계산해보니... 기준보다 적어요! (합격)";
-                answer = `<b>받으실 수 있어요!</b> 🎉<br>소득이 기준(${limitText})보다 적으시거든요.<br>매달 약 <b>34만 원</b>씩 들어올 거예요!`;
+                thought = "계산 결과: 2025년 기준 충족! (수급 가능)";
+                answer = `<b>축하드려요! 받으실 수 있어요!</b> 🎉<br>입력하신 소득이 올해 기준(${limitText})보다 적거든요.<br>매달 약 <b>34만 원대</b>를 받으실 거예요!`;
             } else {
-                thought = "계산해보니... 기준보다 높아요. (주의)";
-                answer = `아이고, 기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>공제되는 항목</b>이 빠져있을 수 있으니, 실망하지 마시고 주민센터에 꼭 가보세요!`;
+                thought = "계산 결과: 기준 초과... (공제 확인 필요)";
+                answer = `아이고, 기준(${limitText})보다 소득이 조금 높게 나오네요.<br>하지만 <b>금융재산 공제(2,000만원)</b> 등을 적용하면 달라질 수 있으니 꼭 신청해보세요!`;
             }
 
             addBotMessage(thought, answer);
@@ -422,25 +418,44 @@
             return;
         }
 
-        // --- 자율 질문 처리 ---
-        if (text.includes("자식") || text.includes("자녀")) {
+        // --- [자율 학습 질문] (파일 내용 반영) ---
+
+        // 고급 자동차 (4000만원 기준)
+        if (text.includes("차") || text.includes("자동차")) {
             addBotMessage(
-                "자녀 소득 규정을 확인 중...",
+                "2025 사업안내 [재산조사] 항목 확인 중...",
+                "자동차가 있어도 되는데요, 혹시 <b>4,000만 원 이상</b>인 고급 승용차인가요?<br>그렇다면 월 소득으로 100% 잡혀서 받기 어려울 수 있어요 😥"
+            );
+        }
+        // 자녀 소득
+        else if (text.includes("자식") || text.includes("자녀")) {
+            addBotMessage(
+                "부양의무자 기준 폐지 확인 완료!",
                 "걱정 마세요! 자녀분이 아무리 부자여도 <b>어르신 형편만 봅니다.</b><br>자녀 소득은 전~혀 상관없어요! 😊"
             );
         }
+        // 신청 장소
         else if (text.includes("신청") || text.includes("어디서")) {
             addBotMessage(
-                "가까운 신청 장소를 찾는 중...",
-                "신청은 동네 <b>행정복지센터(동사무소)</b>나 <b>국민연금공단</b>으로 가시면 돼요.<br>신분증이랑 통장만 꼭 챙겨가세요!"
+                "접수처: 읍면동 주민센터, 국민연금공단",
+                "신청은 동네 <b>행정복지센터(동사무소)</b>나 <b>국민연금공단</b>으로 가시면 돼요.<br><b>신분증</b>이랑 <b>통장</b>만 꼭 챙겨가세요!"
             );
         }
+        // 공무원 연금
         else if (text.includes("공무원")) {
             addBotMessage(
-                "예외 규정을 확인 중...",
-                "공무원연금 등을 받고 계시면 <b>원칙적으로 기초연금을 못 받으세요.</b><br>너무 아쉽지만 제도가 그렇답니다 😥"
+                "직역연금 수급권자 제외 요건 확인...",
+                "공무원연금, 사학연금 등을 받고 계시면 <b>원칙적으로 기초연금 대상이 아니에요.</b><br>너무 아쉽지만 제도가 그렇답니다 😥"
             );
         }
+        // 기초수급자
+        else if (text.includes("수급자") || text.includes("기초생활")) {
+            addBotMessage(
+                "중복 급여 조정 여부 확인...",
+                "이건 조심하셔야 해요.<br>기초연금을 받으면 <b>생계급여가 그만큼 깎일 수 있어요.</b><br>담당 공무원과 꼭 상담해보셔야 손해가 없어요!"
+            );
+        }
+        // 리셋
         else if (text.includes("처음")) {
             step = 0;
             addBotMessage(null, "네! 처음으로 돌아왔어요 🐥");
@@ -448,8 +463,8 @@
         }
         else {
             addBotMessage(
-                "무슨 뜻인지 고민 중...",
-                "위 정보는 제가 아직 학습 중이라 답변이 어렵습니다... 😅<br>아래 버튼을 눌러주시겠어요?"
+                "질문 의도를 파악하는 중...",
+                "제가 아직 배우는 중이라 잘 모르겠어요 😅<br>아래 버튼을 눌러주시겠어요?"
             );
         }
         
