@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>기초연금 365 (고민해결형)</title>
+    <title>기초연금 365 (선택형)</title>
     <style>
-        /* 1. 폰트: 페이퍼로지 (가독성 최적화) */
+        /* 1. 폰트 및 기본 스타일 */
         @font-face {
             font-family: 'Paperlogy';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2408-3@1.0/Paperlogy-5Medium.woff2') format('woff2');
@@ -190,6 +190,7 @@
             margin-top: 5px;
         }
 
+        /* 하단 고정 메뉴 (좌우 스크롤 가능) */
         .fixed-menu {
             padding: 12px 15px;
             background: #ffffff;
@@ -197,22 +198,21 @@
             display: flex;
             gap: 8px;
             overflow-x: auto;
+            white-space: nowrap;
         }
         .fixed-menu::-webkit-scrollbar { display: none; }
 
         .menu-btn {
             font-family: 'Paperlogy', sans-serif;
-            flex: 1;
+            flex: 0 0 auto; /* 버튼 크기 자동 조절 */
             background: #EBF4FF;
             color: #0055FF;
             border: 1px solid #CCE0FF;
-            padding: 12px 10px;
-            border-radius: 15px;
+            padding: 12px 16px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 0.95rem;
             font-weight: 600;
-            white-space: nowrap;
-            min-width: fit-content;
         }
         .menu-btn:hover { background: #D6E4FF; }
 
@@ -282,13 +282,13 @@
 
 <script>
     const chatBox = document.getElementById('chatBox');
+    // 2025년 기준액
     const LIMIT_SINGLE = 2280000;
     const LIMIT_COUPLE = 3648000;
 
     let step = 0; 
     let userType = ''; 
 
-    // ★ [데이터베이스] - 질문 어투를 "어떻게 해?", "해도 돼?" 스타일로 변경
     const categories = {
         "대상/자격": [
             { q: "몇 살부터 신청할 수 있어?", a: "만 65세 생일이 지나셔야 합니다.<br>올해(2025년)는 <b>1960년생</b>이신 분들이 생일 지나면 대상자가 되십니다! 🎂", thought: "수급 연령 확인" },
@@ -370,22 +370,18 @@
         scrollToBottom();
     }
 
-    // UI: 카테고리 버튼 보여주기
     function showCategories() {
         addUserMessage("질문 목록 보여줘.");
-        
         setTimeout(() => {
             const row = document.createElement('div');
             row.className = 'msg-row';
             const icon = document.createElement('div');
             icon.className = 'bot-icon';
             icon.innerText = "🐥";
-            
             const bubble = document.createElement('div');
             bubble.className = 'message bot-message';
             bubble.style.width = "100%";
             bubble.innerHTML = "어떤 게 걱정되세요? 주제를 골라주세요! 👇";
-            
             const grid = document.createElement('div');
             grid.className = 'menu-grid';
             
@@ -396,7 +392,6 @@
                 btn.onclick = () => showSubQuestions(cat);
                 grid.appendChild(btn);
             });
-
             bubble.appendChild(grid);
             row.appendChild(icon);
             row.appendChild(bubble);
@@ -405,22 +400,18 @@
         }, 500);
     }
 
-    // UI: 세부 질문 리스트 보여주기
     function showSubQuestions(category) {
         addUserMessage(category + " 관련 질문");
-        
         setTimeout(() => {
             const row = document.createElement('div');
             row.className = 'msg-row';
             const icon = document.createElement('div');
             icon.className = 'bot-icon';
             icon.innerText = "🐥";
-            
             const bubble = document.createElement('div');
             bubble.className = 'message bot-message';
             bubble.style.width = "100%";
             bubble.innerHTML = `<b>[${category}]</b> 관련해서 많이 하는 고민들이에요.`;
-            
             const list = document.createElement('div');
             list.className = 'question-list';
             
@@ -435,7 +426,6 @@
                 list.appendChild(btn);
             });
 
-            // 상담원 연결 버튼
             const contactBtn = document.createElement('button');
             contactBtn.className = 'q-btn q-btn-special';
             contactBtn.innerText = "📞 상담원이랑 직접 통화할래";
@@ -444,7 +434,6 @@
                 setTimeout(() => addBotMessage("상담원 연결 안내", "답답하시죠? 😥<br>그렇다면 <b>국민연금공단 1355</b>로 전화해 보세요!<br>또는 사시는 곳 <b>주민센터</b>로 가시면 담당자가 자세히 봐드릴 겁니다."), 500);
             };
             list.appendChild(contactBtn);
-
             bubble.appendChild(list);
             row.appendChild(icon);
             row.appendChild(bubble);
@@ -472,7 +461,6 @@
         });
     }
 
-    // 🧠 챗봇 로직
     function processBotResponse(text) {
         if (text === "📚 질문 목록 보여줘" || text.includes("목록")) {
             showCategories();
@@ -491,14 +479,11 @@
             return;
         }
         
-        // 텍스트 검색 (카테고리 + 키워드)
         let found = false;
-        
         Object.keys(categories).forEach(cat => {
             categories[cat].forEach(item => {
                 const cleanQ = item.q.replace("?", "");
                 if (text.includes(cleanQ)) { addBotMessage(item.thought, item.a); found = true; return; }
-                
                 if(!found) {
                     if(text.includes("빚") && item.q.includes("빚")) { addBotMessage(item.thought, item.a); found = true; }
                     else if(text.includes("이사") && item.q.includes("이사")) { addBotMessage(item.thought, item.a); found = true; }
@@ -515,46 +500,65 @@
         });
 
         if (found) return; 
-        
         addBotMessage("의도 파악 중...", "죄송합니다, 제가 아직 배우는 중이라 잘 모르겠어요 😅<br><b>[📚 질문 목록 보여줘]</b> 버튼을 눌러서 찾아보시겠어요?");
     }
 
+    // ★ 수정된 계산 로직 (구간 선택형)
     function handleCalculator(text) {
+        // [STEP 1] 가구 유형 선택 -> 소득 버튼 보여주기
         if (step === 1) {
             if (text.includes("혼자") || text.includes("독거")) {
                 userType = 'single';
-                addBotMessage("2025년 단독 기준", "혼자 사시는군요!<br>2025년 기준 <b>228만 원</b>보다 소득이 적으면 받으실 수 있어요.<br><b>한 달 소득</b>이 대략 얼마 정도 되세요? (숫자만 적어주세요)");
-                updateMenu(["잘 모르겠어", "처음으로"]);
+                addBotMessage("2025년 단독 기준 확인", "혼자 사시는군요.<br>2025년 기준 <b>228만 원</b>보다 적게 버시면 받으실 수 있어요.<br><b>한 달 소득(벌이)</b>이 대략 어느 정도 되세요? 👇");
+                updateMenu(["50만원 이하", "100만원 이하", "100만원 이상", "처음으로"]);
                 step = 2; 
             } else if (text.includes("배우자") || text.includes("부부") || text.includes("있어")) {
                 userType = 'couple';
-                addBotMessage("2025년 부부 기준", "두 분이시군요!<br>두 분 합쳐서 <b>364만 8천 원</b>보다 소득이 적으면 받으실 수 있어요.<br><b>두 분 합쳐서 한 달 소득</b>이 얼마인가요?");
-                updateMenu(["잘 모르겠어", "처음으로"]);
+                addBotMessage("2025년 부부 기준 확인", "두 분이시군요.<br>두 분 합쳐서 <b>364만 8천 원</b>보다 적게 버시면 돼요.<br><b>두 분 소득을 합치면</b> 대략 어느 정도 되세요? 👇");
+                updateMenu(["50만원 이하", "100만원 이하", "100만원 이상", "처음으로"]);
                 step = 2; 
             } else { addBotMessage(null, "혼자 사시는지, 배우자가 있으신지 버튼을 눌러주세요 🐥"); }
             return;
         }
+
+        // [STEP 2] 소득 구간 선택 결과
         if (step === 2) {
-            if(text.includes("모르") || text.includes("응") || text.includes("그래")) { calculateResult(100); return; }
-            const inputNum = parseInt(text.replace(/[^0-9]/g, ''));
-            if (!isNaN(inputNum)) { calculateResult(inputNum); } 
-            else { addBotMessage(null, "숫자만 적어주세요 😢 (예: 150)"); }
+            if (text.includes("처음")) {
+                step = 0;
+                addBotMessage(null, "네, 처음으로 돌아갑니다.");
+                updateMenu(["💰 나 얼마 받을 수 있어?", "📚 질문 목록 보여줘"]);
+                return;
+            }
+
+            const limitText = userType === 'single' ? "228만 원" : "364만 8천 원";
+
+            if (text.includes("50만원")) {
+                addBotMessage("계산 결과: 매우 안전함", `<b>걱정 마세요! 무조건 받으십니다!</b> 🎉<br>생활비 하시기에 빠듯하시겠지만...<br>소득이 기준(${limitText})보다 훨씬 적으셔서 <b style="color:blue">100% 합격권</b>입니다.<br>꼭 신청하세요!`);
+            } else if (text.includes("100만원 이하")) {
+                addBotMessage("계산 결과: 안전함", `<b>네! 충분히 받으실 수 있습니다!</b> 🙆‍♂️<br>기준 금액(${limitText})보다 적으셔서 안정권입니다.<br>재산이 수십 억 있지 않은 이상 합격하실 거예요.`);
+            } else if (text.includes("100만원 이상")) {
+                addBotMessage("계산 결과: 확인 필요", `<b>100만 원이 넘으시는군요!</b><br>그래도 기준(${limitText})만 안 넘으면 받으실 수 있어요.<br>혹시 재산이 많거나 다른 소득이 더 있다면 주민센터에서 <b>정확한 상담</b>을 한번 받아보세요! 🙏`);
+            } else {
+                // 혹시 숫자를 직접 쳤을 경우 대비
+                const inputNum = parseInt(text.replace(/[^0-9]/g, ''));
+                if (!isNaN(inputNum)) {
+                   const income = inputNum * 10000;
+                   const limit = userType === 'single' ? LIMIT_SINGLE : LIMIT_COUPLE;
+                   if (income <= limit) addBotMessage("계산 결과: 합격 가능성", `계산해보니 기준(${limitText})보다 적으시네요.<br>받으실 가능성이 높습니다! 🎉`);
+                   else addBotMessage("계산 결과: 초과", `기준(${limitText})보다 조금 높으시네요.<br>하지만 재산 공제 등을 받으면 가능할 수도 있으니 상담받아보세요.`);
+                } else {
+                    addBotMessage(null, "아래 버튼 중에서 하나를 골라주세요 👇");
+                }
+                return; // 스텝 유지
+            }
+            
+            // 계산 끝나면 초기화
+            step = 0;
+            updateMenu(["💰 나 얼마 받을 수 있어?", "📚 질문 목록 보여줘"]);
             return;
         }
     }
+<script>
 
-    function calculateResult(inputNum) {
-        const income = inputNum * 10000;
-        const limit = userType === 'single' ? LIMIT_SINGLE : LIMIT_COUPLE;
-        const limitText = userType === 'single' ? "228만 원" : "364만 8천 원";
-        
-        if (income <= limit) addBotMessage("계산 결과: 합격 가능성 높음", `<b>축하드립니다! 받으실 가능성이 높습니다!</b> 🎉<br>말씀하신 소득이 기준(${limitText})보다 적으십니다.<br>꼭 신청해 보세요!`);
-        else addBotMessage("계산 결과: 초과 (하지만 확인 필요)", `음, 말씀하신 소득이 기준(${limitText})보다 조금 높으시네요.<br>하지만! <b>재산 공제나 빚(대출)</b>이 있으면 가능하실 수도 있어요.<br>포기하지 마시고 주민센터 가서 상담 받아보세요! 🙏`);
-        
-        step = 0;
-        updateMenu(["💰 나 얼마 받을 수 있어?", "📚 질문 목록 보여줘"]);
-    }
-</script>
-
-</body>
-</html>
+<body>
+<html>
