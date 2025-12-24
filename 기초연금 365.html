@@ -520,7 +520,7 @@
             } else if (text.includes("배우자") || text.includes("부부") || text.includes("있어")) {
                 userType = 'couple';
                 addBotMessage("2025년 부부 기준 확인", "두 분이시군요.<br>두 분 합쳐서 <b>364만 8천 원</b>보다 적게 버시면 수령하실 수 있어요.<br><b>두 분 소득을 합치면</b> 대략 어느 정도 되시나요? 👇");
-                updateMenu(["50만원 이하", "100만원 이하", "100만원 이상", "처음으로"]);
+                updateMenu(["50만원 이하", "100만원 이하", "200만원 이하", "364.8만원 이상", "처음으로"]);
                 step = 2; 
             } else { addBotMessage(null, "혼자 사시는지, 배우자가 있으신지 버튼을 눌러주세요 🐥"); }
             return;
@@ -530,7 +530,7 @@
             if (text.includes("처음")) {
                 step = 0;
                 addBotMessage(null, "네, 처음으로 돌아갑니다.");
-                updateMenu(["💰 나 얼마 받을 수 있어?", "📚 질문 목록 보여줘"]);
+                updateMenu(["💰 난 얼마 정도 받을 수 있을까?", "📚 질문 목록 보여줘"]);
                 return;
             }
 
